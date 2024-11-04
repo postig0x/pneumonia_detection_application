@@ -7,8 +7,7 @@ exec > /var/log/user-data.log 2>&1
 echo "Running as user: $(whoami)"
 
 # Install necessary packages as root
-apt-get update && apt-get upgrade -y
-apt-get install -y wget
+apt-get update
 
 # Download and install Node Exporter as root
 wget https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz
