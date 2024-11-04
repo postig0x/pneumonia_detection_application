@@ -3,12 +3,17 @@
 # Redirect stdout and stderr to a log file
 exec > /var/log/user-data.log 2>&1
 
+# add mykey.pem to ssh into private subnet instances
+echo "${priv_key}" > /home/ubuntu/.ssh/mykey.pem
+sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/mykey.pem
+sudo chmod 400 /home/ubuntu/.ssh/mykey.pem
+
 # Ensure all commands are run with superuser privileges
 echo "Running as user: $(whoami)"
+cd /home/ubuntu
 
 # Update the system
 apt update -y
-apt upgrade -y
 
 # Install wget
 apt install -y wget software-properties-common

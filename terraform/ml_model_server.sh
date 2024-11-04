@@ -6,16 +6,19 @@ exec > /var/log/user-data.log 2>&1
 # Ensure all commands are run with superuser privileges
 echo "Running as user: $(whoami)"
 
+cd /home/ubuntu
+
 # Update and install basic packages
 apt update
 apt install -y python3-pip 
 apt install -y python3-venv 
+apt install -y unzip
 
 # Install NVIDIA drivers and CUDA
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
 dpkg -i cuda-keyring_1.1-1_all.deb
 apt update
-apt -y install cuda-drivers
+apt install -y cuda-drivers
 apt install -y cuda-toolkit-12-6 cudnn-cuda-12
 
 # Set up CUDA environment variables for immediate use in this script
@@ -38,7 +41,6 @@ aws s3 cp s3://x-raysbucket/chest_xray/ /home/ubuntu/chest_xray --recursive --no
 sudo chown -R ubuntu:ubuntu /home/ubuntu/chest_xray
 
 # Clone repository
-cd /home/ubuntu
 git clone https://github.com/kura-labs-org/AIWL1.git /home/ubuntu/CNN_deploy
 
 # Set permissions on the repo

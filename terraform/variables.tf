@@ -28,3 +28,8 @@ variable "key_name" {
   description = "Key pair name for ML EC2 instances"
   default     = "mykey"
 }
+
+variable "priv_mykey" {
+  description = "pem key for mykey"
+  type        = string
+}
