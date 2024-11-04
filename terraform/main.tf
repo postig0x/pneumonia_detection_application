@@ -175,11 +175,14 @@ resource "aws_security_group" "ml_backend_security_group" {
   name   = "ML Backend Security"
 
   ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ml_frontend_security_group.id]
-    description     = "SSH access from frontend"
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
+    security_groups = [
+      aws_security_group.ml_frontend_security_group.id,
+      aws_security_group.monitoring.id
+    ]
+    description = "SSH access from frontend and monitoring"
   }
 
   ingress {
@@ -237,7 +240,7 @@ resource "aws_security_group" "monitoring" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "SSH"
   }
-  
+
   ingress {
     from_port   = 9090
     to_port     = 9090
