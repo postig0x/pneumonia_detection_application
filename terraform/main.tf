@@ -179,7 +179,7 @@ resource "aws_security_group" "ml_backend_security_group" {
     to_port   = 22
     protocol  = "tcp"
     security_groups = [
-      aws_security_group.ml_frontend_security_group.id,
+      aws_security_group.frontend.id,
       aws_security_group.monitoring.id
     ]
     description = "SSH access from frontend and monitoring"
@@ -197,7 +197,7 @@ resource "aws_security_group" "ml_backend_security_group" {
     from_port       = 5000
     to_port         = 5000
     protocol        = "tcp"
-    security_groups = [aws_security_group.ml_frontend_security_group.id]
+    security_groups = [aws_security_group.frontend.id]
     description     = "API access from frontend"
   }
 
