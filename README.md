@@ -8,7 +8,9 @@
 
 The web, application, and model training servers reside in a private subnet, using Nginx in the public subnet as a reverse proxy to the web server. This decision highlights the importance of security in cloud-based applications, ensuring that sensitive medical data and the application are not directly exposed to the internet.
 
-A monitoring server with Prometheus and Grafana is provisioned in a public subnet for monitoring the model training server's performance. _System diagram is shown below._
+A monitoring server with Prometheus and Grafana is provisioned in a public subnet for monitoring the model training server's performance.
+
+_System diagram is shown below._
 
 ## Steps
 
@@ -17,15 +19,15 @@ The application is designed to allow x-ray images to be uploaded via the fronten
 In order to provision the infrastructure discussed and build a working application, the following steps were taken:
 
 1. Create `t3.medium` instance for terraform
-  1. [Install](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) terraform
+    1. [Install](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) terraform
 2. Build out the infrastructure using `terraform/main.tf` with the `terraform` `init`, `validate`, `plan`, and `apply` commands.
 3. Configure the connections in the backend and frontend:
-  1. **Monitoring Server**: Add a `node_exporter` job to the monitoring server's `/opt/prometheus/prometheus.yml` file. Restart the prometheus daemon.
+    1. **Monitoring Server**: Add a `node_exporter` job to the monitoring server's `/opt/prometheus/prometheus.yml` file. Restart the prometheus daemon.
 3. **Nginx Server**: Configure Nginx to route to the web server by modifying `/etc/nginx/sites-enabled/default` on the Nginx server. Restart Nginx daemon
 4. **App Server**: Configure redis connection by modifying `/etc/redis/redis.conf`
 5. **ML Training Server**: Modify the project's `/model/inference.py` file to connect to the application server's IP. This allows the model training server to connect to the database on the application server and post the results of the inferences on the test images to the database. Doing this allows the frontend to access that data and display the results.
-  1. After modifying that file, the model can be compiled and trained using `model/cnn.py`. The output is a `.keras` file that can be passed back to the application server, which can run inference using that file on the CPU.
-  2. Run `model/inference.py` _AFTER_ the step above.
+    1. After modifying that file, the model can be compiled and trained using `model/cnn.py`. The output is a `.keras` file that can be passed back to the application server, which can run inference using that file on the CPU.
+    2. Run `model/inference.py` _AFTER_ the step above.
 6. Set up python environment and install dependencies on the application server's project folder (`pneumonia_api/`) and run the server with `nohup gunicorn --bind 0.0.0.0:5000 app:app &` so that it runs in the background.
 7. Connect to the UI (web) server and set `API_URL` to the private IP of the application server in `pneumonia_web/app.py`. Set up python environment and install dependencies inside `pneumonia_web/` and run the server in the background: `nohup gunicord --config gunicorn_config.py app:app &`.
 
